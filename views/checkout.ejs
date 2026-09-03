@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - <%= storeName %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">SOUTHSIDE <span class="red-text">RP</span></a>
+            <div class="nav-links">
+                <a href="/#store">Store</a>
+                <a href="/cart">Cart (<span id="cartCount"><%= cartCount %></span>)</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section" style="padding-top: 120px;">
+        <div class="container">
+            <div class="text-center mb-48">
+                <span class="sec-eyebrow">Checkout</span>
+                <h2 class="sec-title">Complete <span class="red-text">Order</span></h2>
+            </div>
+            <form action="/checkout" method="POST" id="checkoutForm">
+                <div class="checkout-grid">
+                    <div class="checkout-info">
+                        <h2>Your Details</h2>
+
+                        <div class="form-group">
+                            <label>In-Game Name (IGN)</label>
+                            <input type="text" name="ign" id="ign" placeholder="Your character name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Discord Username</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" name="discord" id="discordInput" placeholder="Username (no @ or #)" required style="flex:1;">
+                                <button type="button" class="btn btn-red btn-sm" onclick="checkDiscord()" id="discordBtn">Check</button>
+                            </div>
+                            <small id="discordStatus" style="margin-top:6px; display:block;"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" placeholder="your@email.com" required>
+                        </div>
+
+                        <h2 style="margin-top:32px;">Payment Method</h2>
+
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="credit_card" checked onchange="showPayment('credit_card')">
+                                <span class="payment-label">Credit / Debit Card</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="bank_transfer" onchange="showPayment('bank_transfer')">
+                                <span class="payment-label">Bank Transfer (Discord Ticket)</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="crypto" onchange="showPayment('crypto')">
+                                <span class="payment-label">Cryptocurrency</span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="paypal" onchange="showPayment('paypal')">
+                                <span class="payment-label">PayPal</span>
+                            </label>
+                        </div>
+
+                        <div id="credit_card_form" class="payment-form">
+                            <div class="form-group">
+                                <label>Card Number</label>
+                                <input type="text" name="cardNumber" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                <div class="form-group">
+                                    <label>Expiry</label>
+                                    <input type="text" name="cardExpiry" id="cardExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+                                </div>
+                                <div class="form-group">
+                                    <label>CVV</label>
+                                    <input type="text" name="cardCvv" id="cardCvv" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Name on Card</label>
+                                <input type="text" name="cardName" id="cardName" placeholder="John Smith">
+                            </div>
+                        </div>
+
+                        <div id="bank_transfer_form" class="payment-form" style="display:none;">
+                            <div class="payment-info-box">
+                                <h3>Bank Transfer Instructions</h3>
+                                <p>Join our Discord and open a ticket to receive bank transfer details. Your order will be processed after payment is confirmed.</p>
+                                <a href="<%= discord %>" target="_blank" class="btn btn-red" style="width:100%; margin-top:12px; text-align:center;">Open Discord Ticket</a>
+                            </div>
+                        </div>
+
+                        <div id="crypto_form" class="payment-form" style="display:none;">
+                            <div class="payment-info-box">
+                                <h3>Cryptocurrency Payment</h3>
+                                <p>Join our Discord and open a ticket to receive crypto payment details (Bitcoin, Ethereum, etc).</p>
+                                <a href="<%= discord %>" target="_blank" class="btn btn-red" style="width:100%; margin-top:12px; text-align:center;">Open Discord Ticket</a>
+                            </div>
+                        </div>
+
+                        <div id="paypal_form" class="payment-form" style="display:none;">
+                            <div class="payment-info-box">
+                                <h3>PayPal Payment</h3>
+                                <p>Join our Discord and open a ticket to receive PayPal payment details.</p>
+                                <a href="<%= discord %>" target="_blank" class="btn btn-red" style="width:100%; margin-top:12px; text-align:center;">Open Discord Ticket</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-summary">
+                        <h2>Order Summary</h2>
+                        <% cart.forEach(item => { %>
+                        <div class="summary-item">
+                            <span><%= item.name %> x<%= item.quantity %></span>
+                            <span>&pound;<%= (item.price * item.quantity).toFixed(2) %></span>
+                        </div>
+                        <% }); %>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>&pound;<%= total.toFixed(2) %></span>
+                        </div>
+                        <button type="submit" class="btn btn-red btn-xl" style="width: 100%; margin-bottom: 12px;" id="submitBtn">Place Order</button>
+                        <p class="checkout-note">By placing this order you agree to our terms of service.</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 <%= storeName %>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    var discordVerified = false;
+
+    function showPayment(type) {
+        document.querySelectorAll('.payment-form').forEach(f => f.style.display = 'none');
+        var el = document.getElementById(type + '_form');
+        if (el) el.style.display = 'block';
+    }
+
+    function checkDiscord() {
+        var username = document.getElementById('discordInput').value;
+        var status = document.getElementById('discordStatus');
+        var btn = document.getElementById('discordBtn');
+        if (!username) { status.innerHTML = '<span style="color:#ef4444;">Enter your Discord username</span>'; return; }
+        btn.textContent = 'Checking...';
+        btn.disabled = true;
+        fetch('/api/check-discord/' + encodeURIComponent(username))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            btn.textContent = 'Check';
+            btn.disabled = false;
+            if (data.inServer) {
+                status.innerHTML = '<span style="color:#22c55e;">&#10003; Found in Discord server as "' + data.displayName + '"</span>';
+                discordVerified = true;
+            } else {
+                status.innerHTML = '<span style="color:#ef4444;">&#10007; Not found in Discord server. Join first: <%= discord %></span>';
+                discordVerified = false;
+            }
+        })
+        .catch(function() {
+            btn.textContent = 'Check';
+            btn.disabled = false;
+            status.innerHTML = '<span style="color:#ef4444;">Could not check. Try again.</span>';
+        });
+    }
+
+    function formatCard(input) {
+        var v = input.value.replace(/\D/g, '').substring(0, 16);
+        var formatted = v.match(/.{1,4}/g);
+        input.value = formatted ? formatted.join(' ') : v;
+    }
+
+    function formatExpiry(input) {
+        var v = input.value.replace(/\D/g, '').substring(0, 4);
+        if (v.length >= 2) v = v.substring(0, 2) + '/' + v.substring(2);
+        input.value = v;
+    }
+
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        if (!discordVerified) {
+            e.preventDefault();
+            alert('Please verify your Discord username first.');
+            return;
+        }
+    });
+    </script>
+    <script src="/js/store.js"></script>
+</body>
+</html>
