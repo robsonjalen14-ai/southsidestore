@@ -49,6 +49,7 @@ app.use((req, res, next) => {
     res.locals.cartCount = req.session.cart.reduce((sum, item) => sum + item.quantity, 0);
     res.locals.storeName = STORE_NAME;
     res.locals.discord = STORE_DISCORD;
+    res.locals.tebexStore = '#';
     res.locals.stripeKey = process.env.STRIPE_PUBLISHABLE_KEY || '';
     next();
 });
