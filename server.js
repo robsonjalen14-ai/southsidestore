@@ -253,48 +253,6 @@ app.get('/payment-success', (req, res) => {
 app.get('/api/products', (req, res) => { res.json(products); });
 app.get('/api/cart/count', (req, res) => { res.json({ count: req.session.cart.reduce((sum, item) => sum + item.quantity, 0) }); });
 
-app.get('/api/check-discord/:username', (req, res) => {
-    const username = req.params.username;
-    const options = {
-        hostname: 'discord.com',
-        path: `/api/v10/guilds/${DISCORD_GUILD_ID}/members/search?query=${encodeURIComponent(username)}&limit=5`,
-        method: 'GET',
-        headers: {
-            'Authorization': `Bot ${DISCORD_BOT_TOKEN}`,
-            'Content-Type': 'application/json'
-        }
-    };
-    const request = https.request(options, (response) => {
-        let data = '';
-        response.on('data', chunk => data += chunk);
-        response.on('end', () => {
-            try {
-                const members = JSON.parse(data);
-                if (Array.isArray(members) && members.length > 0) {
-                    const match = members.find(m => {
-                        const dn = (m.nick || '').toLowerCase();
-                        const un = (m.user && m.user.username || '').toLowerCase();
-                        return dn === username.toLowerCase() || un === username.toLowerCase();
-                    });
-                    if (match) {
-                        res.json({ inServer: true, displayName: match.nick || match.user.username });
-                    } else {
-                        res.json({ inServer: true, displayName: members[0].nick || members[0].user.username });
-                    }
-                } else {
-                    res.json({ inServer: false });
-                }
-            } catch (e) {
-                res.json({ inServer: false, error: 'Could not parse Discord data' });
-            }
-        });
-    });
-    request.on('error', (e) => {
-        res.json({ inServer: false, error: 'Could not connect to Discord' });
-    });
-    request.end();
-});
-
 app.listen(PORT, () => {
     console.log(`Southside Store running on port ${PORT}`);
 });
