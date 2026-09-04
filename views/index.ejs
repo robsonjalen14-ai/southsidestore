@@ -11,15 +11,15 @@
 </head>
 <body>
     <script>window.__TEBEX_STORE = '<%= tebexStore %>';</script>
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">SOUTHSIDE <span class="red-text">RP</span></a>
+            <a href="/" class="nav-logo">SOUTHSIDE <span class="blue-text">RP</span></a>
             <div class="nav-links">
                 <a href="#store">Store</a>
                 <a href="#about">About</a>
                 <a href="/cart">Cart (<span id="cartCount"><%= cartCount %></span>)</a>
-                <a href="https://discord.gg/pwRPhNWU7T" target="_blank" class="btn btn-red btn-sm">Join Server</a>
-                <a href="https://discord.gg/pwRPhNWU7T" target="_blank" class="btn btn-outline-red btn-sm">Discord</a>
+                <a href="https://discord.gg/pwRPhNWU7T" target="_blank" class="btn btn-blue btn-sm">Join Server</a>
+                <a href="https://discord.gg/pwRPhNWU7T" target="_blank" class="btn btn-outline-blue btn-sm">Discord</a>
             </div>
         </div>
     </nav>
@@ -29,7 +29,7 @@
         <div class="hero-glow-1"></div>
         <div class="hero-glow-2"></div>
         <div class="hero-content">
-            <h1 class="hero-title">SOUTHSIDE<br><span class="red-text">RP</span></h1>
+            <h1 class="hero-title">SOUTHSIDE<br><span class="blue-text">RP</span></h1>
             <p class="hero-sub">The Ultimate FiveM Roleplay Experience</p>
             <div class="hero-stats">
                 <div class="stat">
@@ -46,8 +46,8 @@
                 </div>
             </div>
             <div class="hero-actions">
-                <a href="https://discord.gg/pwRPhNWU7T" target="_blank" class="btn btn-red btn-xl">Join Server</a>
-                <a href="#store" class="btn btn-outline-red btn-xl">Browse Store</a>
+                <a href="https://discord.gg/pwRPhNWU7T" target="_blank" class="btn btn-blue btn-xl">Join Server</a>
+                <a href="#store" class="btn btn-outline-blue btn-xl">Browse Store</a>
             </div>
         </div>
     </header>
@@ -56,7 +56,7 @@
         <div class="container">
             <div class="text-center mb-48">
                 <span class="sec-eyebrow">Store</span>
-                <h2 class="sec-title">Featured <span class="red-text">Packages</span></h2>
+                <h2 class="sec-title">Featured <span class="blue-text">Packages</span></h2>
                 <div class="section-divider"></div>
                 <p class="sec-sub">Support the server and unlock exclusive perks</p>
             </div>
@@ -77,7 +77,7 @@
                                     <option value="2">2x</option>
                                 </select>
                                 <% } %>
-                                <button class="btn btn-red" onclick="addToCart(<%= product.id %>)">Buy Now</button>
+                                <button class="btn btn-blue" onclick="addToCart(<%= product.id %>)">Buy Now</button>
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
         <div class="container">
             <div class="text-center mb-48">
                 <span class="sec-eyebrow">Why Us</span>
-                <h2 class="sec-title">Why <span class="red-text">Southside RP</span>?</h2>
+                <h2 class="sec-title">Why <span class="blue-text">Southside RP</span>?</h2>
                 <div class="section-divider"></div>
             </div>
             <div class="usp-grid">
@@ -118,7 +118,7 @@
         <div class="container">
             <div class="footer-inner">
                 <div class="footer-brand">
-                    <h3>SOUTHSIDE <span class="red-text">RP</span></h3>
+                    <h3>SOUTHSIDE <span class="blue-text">RP</span></h3>
                     <p>Premium FiveM Roleplay Server</p>
                 </div>
                 <div class="footer-links">
@@ -134,5 +134,12 @@
     </footer>
 
     <script src="/js/store.js"></script>
+    <script>
+    window.addEventListener('scroll', function() {
+        var navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) { navbar.classList.add('scrolled'); }
+        else { navbar.classList.remove('scrolled'); }
+    });
+    </script>
 </body>
 </html>

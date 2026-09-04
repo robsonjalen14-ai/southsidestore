@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="/" class="nav-logo">SOUTHSIDE <span class="red-text">RP</span></a>
+            <a href="/" class="nav-logo">SOUTHSIDE <span class="blue-text">RP</span></a>
             <div class="nav-links">
                 <a href="/#store">Store</a>
                 <a href="/cart">Cart (<span id="cartCount"><%= cartCount %></span>)</a>
@@ -24,7 +24,8 @@
         <div class="container">
             <div class="text-center mb-48">
                 <span class="sec-eyebrow">Checkout</span>
-                <h2 class="sec-title">Complete <span class="red-text">Order</span></h2>
+                <h2 class="sec-title">Complete <span class="blue-text">Order</span></h2>
+                <div class="section-divider"></div>
             </div>
             <form action="/checkout" method="POST" id="checkoutForm">
                 <input type="hidden" name="payment" value="stripe">
@@ -63,7 +64,7 @@
                             <span>Total</span>
                             <span>&pound;<%= total.toFixed(2) %></span>
                         </div>
-                        <button type="submit" class="btn btn-red btn-xl" style="width: 100%; margin-bottom: 12px;" id="submitBtn">Pay with Card &rarr;</button>
+                        <button type="submit" class="btn btn-blue btn-xl" style="width: 100%; margin-bottom: 12px;" id="submitBtn">Pay with Card &rarr;</button>
                         <p class="checkout-note">By placing this order you agree to our terms of service.</p>
                     </div>
                 </div>
@@ -110,6 +111,12 @@
             btn.textContent = 'Pay with Card \u2192';
             btn.disabled = false;
         });
+    });
+
+    window.addEventListener('scroll', function() {
+        var navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) { navbar.classList.add('scrolled'); }
+        else { navbar.classList.remove('scrolled'); }
     });
     </script>
 </body>
